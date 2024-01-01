@@ -1,38 +1,204 @@
-.App {
-  text-align: center;
+@font-face {
+    font-family: "myfont";
+    src: url(../public/assets/fonts/Merriweather-Regular.ttf);
+}
+@font-face {
+    font-family: "myfont2";
+    src: url(../public/assets/fonts/Vazirmatn-Regular.ttf);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+    font-family: "myfont2";
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-image: url(../public/assets/images/img-body.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+.a_tag {
+    text-decoration: none;
 }
 
-.App-link {
-  color: #61dafb;
+.main_color {
+    color: #c54109;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main_bg {
+    background-color: transparent;
 }
+
+.header {
+    background: rgb(82, 82, 82);
+    background: linear-gradient(113deg, rgba(82, 82, 82, 1) 10%, rgba(0, 0, 0, 1) 100%);
+    border-radius: 0 0 20px 20px;
+    border-bottom: 5px solid #c54109;
+}
+
+.header a {
+    text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+    font-family: "myfont";
+}
+
+.header img {
+    width: 5%;
+}
+
+
+.sidebar {
+    width: 300px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    background: rgb(82, 82, 82);
+    background: linear-gradient(113deg, rgb(51, 51, 51) 0%, rgba(0, 0, 0, 1) 100%);
+    right: -240px;
+    transition: 0.5s;
+    border-left: 5px solid #c54109;
+    z-index: 1000;
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.menu_btn button {
+    border: none;
+    background-color: transparent;
+    position: fixed;
+    top: 5px;
+    right: 5px;
+}
+
+.list_links a {
+    position: relative;
+}
+
+.list_icons {
+    margin-right: 5.5rem;
+}
+
+.profile_image img {
+    border: 3px solid #c54109;
+}
+
+@media screen and (max-width: 800px) {
+    .sidebar {
+        right: -300px;
+    }
+    
+    .menu_btn button {
+        top: 5px;
+        right: 10px;
+    }
+
+    .list_icons {
+        margin-right: 6rem;
+    }
+
+}
+
+
+/* =================================Custom Scrollbars============================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #D05520;
+    border-radius: 15px;
+}
+
+/* ===================================================products========================================= */
+.products_main .table {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    background-color: rgba(110, 110, 110, 0.5);
+}
+
+.products_main .table th {
+    background-color: rgba(190, 190, 190, 0.5);
+}
+
+
+.products_main .table td {
+    background-color: rgba(243, 243, 243, 0.5);
+}
+
+.products_main .search_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.products_main .search_box input {
+    border: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.pagination nav ul {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.content_table_row {
+    height: 5vh;
+}
+
+.content_table p {
+    height: 3rem;
+    overflow: hidden;
+}
+
+.content_table {
+    width: 20%;
+}
+
+.search_box {
+    cursor: pointer;
+}
+
+.modal_fields input {
+    border: none;
+    outline: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.modal_fields textarea {
+    border: none;
+    outline: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.modal_header {}
+
+@media screen and (max-width : 600px) {
+    .products_main .table {
+        font-size: 60%;
+    }
+
+    .products_main .search_box {
+        justify-content: space-around;
+    }
+}
+
+
+
+
+
+
+
+
+/* ===================================================products========================================= */
+/* ===================================================products========================================= */
+/* ===================================================products========================================= */
