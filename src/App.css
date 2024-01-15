@@ -38,6 +38,8 @@ body {
     background: linear-gradient(113deg, rgba(82, 82, 82, 1) 10%, rgba(0, 0, 0, 1) 100%);
     border-radius: 0 0 20px 20px;
     border-bottom: 5px solid #c54109;
+    position: fixed;
+    width: 100%;
 }
 
 .header a {
@@ -80,7 +82,7 @@ body {
 }
 
 .list_icons {
-    margin-right: 5.5rem;
+    margin-right: 5.9rem;
 }
 
 .profile_image img {
@@ -122,6 +124,10 @@ body {
 }
 
 /* ===================================================products========================================= */
+.products_main {
+    padding-top: 5%;
+}
+
 .products_main .table {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     background-color: rgba(110, 110, 110, 0.5);

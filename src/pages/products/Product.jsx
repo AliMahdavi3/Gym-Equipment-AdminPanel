@@ -1,16 +1,65 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { FaPlusSquare, FaWindowClose  } from 'react-icons/fa'
+import { FaPlusSquare, FaWindowClose } from 'react-icons/fa'
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+import AddProduct from './AddProduct';
+import swal from 'sweetalert';
 
 const Product = () => {
   const [fullscreen, setFullscreen] = useState(true);
   const [show, setShow] = useState(false);
+  const [data, setData] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState('');
 
-  function handleShow(breakpoint) {
+
+  useEffect(() => {
+    axios.get('http://localhost:4000/api/products').then((res) => {
+      console.log(res.data.products);
+      setData(res.data.products)
+    }).catch((error) => {
+      console.log(error.message);
+    })
+  }, []);
+
+
+  const handleShowModal = (productId, breakpoint) => {
     setFullscreen(breakpoint);
+    setSelectedProductId(productId ? productId : '');
+    console.log(productId ? productId : '');
     setShow(true);
   }
+
+  const handleDeleteProduct = async (productId) => {
+    await swal({
+      title: "آیا از عملیات حذف مطمئن هستید؟",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios.delete(`http://localhost:4000/api/product/${productId}`)
+          .then((res) => {
+            console.log(res.data);
+            setData(data.filter((d) => d._id !== productId));
+            swal("اطلاعات موردنظر حذف شد!", {
+              icon: "success",
+            })
+          })
+          .catch((error) => {
+            swal({
+              title: "خطایی رخ داده!",
+              text: error.message,
+              icon: "warning",
+              button: "متوجه شدم",
+          });
+          });
+      } else {
+        swal("!عملیات متوقف شد");
+      }
+    });
+  };
+
   return (
     <div className='products_main'>
       <div className="container">
@@ -20,42 +69,15 @@ const Product = () => {
         <div>
           <div className="my-3 search_box">
             <input type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
-            <FaPlusSquare onClick={() => handleShow()} className='fs-1 text-success' />
+            <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />
           </div>
           <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
             <Modal.Header dir='ltr' className='modal_header container'>
               <Modal.Title>Modal</Modal.Title>
-                <FaWindowClose className="close text-danger fs-1" onClick={() => setShow(false)}/>
+              <FaWindowClose className="close text-danger fs-1" onClick={() => setShow(false)} />
             </Modal.Header>
             <Modal.Body>
-              <form className='container w-100'>
-                <div className='modal_fields'>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="title">نام محصول</label>
-                    <input placeholder='نام محصول' type="text" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="content">توضیحات محصول</label>
-                    <textarea placeholder='توضیحات محصول' name="" className='px-3 py-2 rounded-3 w-100' id="" cols="30" rows="10"></textarea>
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر محصول</label>
-                    <input placeholder='تصویر محصول' type="file" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="productCode">کد محصول</label>
-                    <input placeholder='کد محصول' type="text" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="category">دسته بندی محصول</label>
-                    <input placeholder='دسته بندی محصول' type="text" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                </div>
-                <div className="submit_btn mt-3 mb-5">
-                  <button className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                  <button className='btn btn-danger px-3 mx-2'>انصراف</button>
-                </div>
-              </form>
+              <AddProduct selectedProductId={selectedProductId} />
             </Modal.Body>
           </Modal>
         </div>
@@ -73,34 +95,27 @@ const Product = () => {
               </tr>
             </thead>
             <tbody className="table-group-divider">
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td className='content_table'>
-                  <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
-                </td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <FaTrashAlt className='mx-2 text-danger' />
-                  <FaEdit className='mx-2 text-warning' />
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td className='content_table'>
-                  <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
-                </td>
-                <td>@fat</td>
-                <td>@fat</td>
-                <td>@fat</td>
-                <td>
-                  <FaTrashAlt className='mx-2 text-danger' />
-                  <FaEdit className='mx-2 text-warning' />
-                </td>
-              </tr>
+              {
+                Array.isArray(data) ?
+                  data.map((d, index) => (
+                    <tr key={index}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{d.title}</td>
+                      <td className='content_table'>
+                        <p>{d.content}</p>
+                      </td>
+                      <td className='w-25'>
+                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[0]} alt="" />
+                      </td>
+                      <td>{d.category}</td>
+                      <td>{d.productCode}</td>
+                      <td>
+                        <FaTrashAlt onClick={() => handleDeleteProduct(d._id)} className='mx-2 text-danger' />
+                        <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
+                      </td>
+                    </tr>
+                  )) : null
+              }
             </tbody>
           </table>
         </div>
