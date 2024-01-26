@@ -1,31 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { FaTrashAlt } from "react-icons/fa";
-import moment from 'moment-jalaali';
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaPlusSquare, FaWindowClose } from 'react-icons/fa'
+import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import swal from 'sweetalert';
+import AddQuestion from './AddQuestion';
 
-const Dashboard = () => {
+
+const Question = () => {
+  const [fullscreen, setFullscreen] = useState(true);
+  const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
+  const [selectedQuestionId, setSelectedQuestionId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/sendMessages').then((res) => {
-      console.log(res.data.sendMessages);
-      setData(res.data.sendMessages)
+    axios.get('http://localhost:4000/api/questions').then((res) => {
+      console.log(res.data.questions);
+      setData(res.data.questions)
     }).catch((error) => {
       console.log(error.message);
     })
   }, []);
+
+
+  const handleShowModal = (questionId, breakpoint) => {
+    setFullscreen(breakpoint);
+    setSelectedQuestionId(questionId ? questionId : '');
+    console.log(questionId ? questionId : '');
+    setShow(true);
+  }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data
     .filter(
       (d) =>
-        d.name.includes(searchTerm) ||
-        d.phoneNumber.includes(searchTerm) ||
+        d.title.includes(searchTerm) ||
         d.content.includes(searchTerm)
     )
     .slice(0)
@@ -48,8 +61,7 @@ const Dashboard = () => {
   }
 
 
-
-  const handleDeleteQuestion = async (messageId) => {
+  const handleDeleteQuestion = async (questionId) => {
     await swal({
       title: "آیا از عملیات حذف مطمئن هستید؟",
       icon: "warning",
@@ -57,10 +69,10 @@ const Dashboard = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        axios.delete(`http://localhost:4000/api/sendMessage/${messageId}`)
+        axios.delete(`http://localhost:4000/api/question/${questionId}`)
           .then((res) => {
             console.log(res.data);
-            setData(data.filter((d) => d._id !== messageId));
+            setData(data.filter((d) => d._id !== questionId));
             swal("اطلاعات موردنظر حذف شد!", {
               icon: "success",
             })
@@ -83,40 +95,48 @@ const Dashboard = () => {
     <div className='products_main'>
       <div className="container">
         <div className='title'>
-          <h1 className='pt-5 pb-3 fs-1 text-center'>پیام ها</h1>
+          <h1 className='pt-4 pb-5 fs-1 text-center'>سوالات پرتکرار</h1>
         </div>
         <div>
           <div className="my-3 search_box">
             <input onChange={(e) => setSearchTerm(e.target.value)} type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+            <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />
           </div>
+          <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
+            <Modal.Header dir='ltr' className='modal_header container'>
+              <Modal.Title>Modal</Modal.Title>
+              <FaWindowClose className="close text-danger fs-1" onClick={() => setShow(false)} />
+            </Modal.Header>
+            <Modal.Body>
+              <AddQuestion selectedQuestionId={selectedQuestionId} />
+            </Modal.Body>
+          </Modal>
         </div>
         <div className='mt-3 table-responsive rounded-4'>
           <table className="table rounded-4 text-center">
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">نام</th>
-                <th scope="col">تاریخ</th>
-                <th scope="col">شماره تلفن</th>
+                <th scope="col">نام محصول</th>
                 <th scope="col">توضیحات</th>
                 <th scope="col">ویرایش</th>
               </tr>
             </thead>
             <tbody className="table-group-divider">
-              {currentItems.map((d, index) => (
-                <tr key={index}>
-                  <th scope="row">{data.length - indexOfFirstItem - index}</th>
-                  <td>{d.name}</td>
-                  <td className='text-success fw-semibold'>{moment(d.createdAt).format('jYYYY/jMM/jDD HH:mm:ss')}</td>
-                  <td className='text-danger fw-semibold'>{d.phoneNumber}</td>
-                  <td className='w-50'>
-                    <p>{d.content}</p>
-                  </td>
-                  <td>
-                    <FaTrashAlt onClick={() => handleDeleteQuestion(d._id)} className='mx-2 text-danger' />
-                  </td>
-                </tr>
-              ))
+              {
+                currentItems.map((d, index) => (
+                  <tr key={index}>
+                    <th scope="row">{data.length - indexOfFirstItem - index}</th>
+                    <td>{d.title}</td>
+                    <td className='content_table'>
+                      <p>{d.content}</p>
+                    </td>
+                    <td>
+                      <FaTrashAlt onClick={() => handleDeleteQuestion(d._id)} className='mx-2 text-danger' />
+                      <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
+                    </td>
+                  </tr>
+                ))
               }
             </tbody>
           </table>
@@ -143,4 +163,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Question

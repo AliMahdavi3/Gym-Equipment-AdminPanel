@@ -66,8 +66,7 @@ const BestSelling = () => {
           <h1 className='pt-4 pb-5 fs-1 text-center'>پرفروشترین محصولات</h1>
         </div>
         <div>
-          <div className="my-3 search_box">
-            <input type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+          <div dir='ltr' className="my-3 search_box">
             <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />
           </div>
           <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
@@ -112,25 +111,6 @@ const BestSelling = () => {
                   )) : null}
             </tbody>
           </table>
-        </div>
-        <div className="pagination mt-2 d-flex justify-content-center align-items-center">
-          <nav dir='ltr' aria-label="Page navigation example">
-            <ul className="pagination rounded-3">
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li className="page-item"><a className="page-link" href="/">1</a></li>
-              <li className="page-item"><a className="page-link" href="/">2</a></li>
-              <li className="page-item"><a className="page-link" href="/">3</a></li>
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </div>

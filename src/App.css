@@ -2,6 +2,12 @@
     font-family: "myfont";
     src: url(../public/assets/fonts/Merriweather-Regular.ttf);
 }
+
+@font-face {
+    font-family: "myfont1";
+    src: url(../public/assets/fonts/Changa-SemiBold.ttf);
+}
+
 @font-face {
     font-family: "myfont2";
     src: url(../public/assets/fonts/Vazirmatn-Regular.ttf);
@@ -61,8 +67,8 @@ body {
     background: linear-gradient(113deg, rgb(51, 51, 51) 0%, rgba(0, 0, 0, 1) 100%);
     right: -240px;
     transition: 0.5s;
-    border-left: 5px solid #c54109;
     z-index: 1000;
+    overflow-y: auto;
 }
 
 .sidebar.active {
@@ -77,23 +83,26 @@ body {
     right: 5px;
 }
 
-.list_links a {
-    position: relative;
+
+.list-links {
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 .list_icons {
     margin-right: 5.9rem;
 }
 
-.profile_image img {
-    border: 3px solid #c54109;
+.profile_image {
+    font-family: 'myfont1';
+    color: #c54109;
 }
 
 @media screen and (max-width: 800px) {
     .sidebar {
         right: -300px;
     }
-    
+
     .menu_btn button {
         top: 5px;
         right: 10px;
@@ -108,19 +117,19 @@ body {
 
 /* =================================Custom Scrollbars============================ */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #D05520;
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
 /* ===================================================products========================================= */

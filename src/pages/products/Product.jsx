@@ -11,7 +11,9 @@ const Product = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState('');
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/products').then((res) => {
@@ -28,6 +30,35 @@ const Product = () => {
     setSelectedProductId(productId ? productId : '');
     console.log(productId ? productId : '');
     setShow(true);
+  }
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data
+    .filter(
+      (d) =>
+        d.title.includes(searchTerm) ||
+        d.content.includes(searchTerm) ||
+        d.category.includes(searchTerm) ||
+        d.productCode.includes(searchTerm)
+    )
+    .slice(0)
+    .reverse()
+    .slice(indexOfFirstItem, indexOfLastItem);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  }
+
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const paginationLinks = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    paginationLinks.push(
+      <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => handlePageChange(i)}>{i}</button>
+      </li>
+    );
   }
 
   const handleDeleteProduct = async (productId) => {
@@ -52,7 +83,7 @@ const Product = () => {
               text: error.message,
               icon: "warning",
               button: "متوجه شدم",
-          });
+            });
           });
       } else {
         swal("!عملیات متوقف شد");
@@ -68,7 +99,7 @@ const Product = () => {
         </div>
         <div>
           <div className="my-3 search_box">
-            <input type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+            <input onChange={(e) => setSearchTerm(e.target.value)} type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
             <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />
           </div>
           <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
@@ -96,44 +127,41 @@ const Product = () => {
             </thead>
             <tbody className="table-group-divider">
               {
-                Array.isArray(data) ?
-                  data.map((d, index) => (
-                    <tr key={index}>
-                      <th scope="row">{index + 1}</th>
-                      <td>{d.title}</td>
-                      <td className='content_table'>
-                        <p>{d.content}</p>
-                      </td>
-                      <td className='w-25'>
-                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[0]} alt="" />
-                      </td>
-                      <td>{d.category}</td>
-                      <td>{d.productCode}</td>
-                      <td>
-                        <FaTrashAlt onClick={() => handleDeleteProduct(d._id)} className='mx-2 text-danger' />
-                        <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
-                      </td>
-                    </tr>
-                  )) : null
+                currentItems.map((d, index) => (
+                  <tr key={index}>
+                    <th scope="row">{data.length - indexOfFirstItem - index}</th>
+                    <td>{d.title}</td>
+                    <td className='content_table'>
+                      <p>{d.content}</p>
+                    </td>
+                    <td className='w-25'>
+                      <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[0]} alt="" />
+                    </td>
+                    <td>{d.category}</td>
+                    <td>{d.productCode}</td>
+                    <td>
+                      <FaTrashAlt onClick={() => handleDeleteProduct(d._id)} className='mx-2 text-danger' />
+                      <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
+                    </td>
+                  </tr>
+                ))
               }
             </tbody>
           </table>
         </div>
         <div className="pagination mt-2 d-flex justify-content-center align-items-center">
-          <nav dir='ltr' aria-label="Page navigation example">
+          <nav dir="ltr" aria-label="Page navigation example">
             <ul className="pagination rounded-3">
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Previous">
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                <button className="page-link" aria-label="Previous" onClick={() => handlePageChange(currentPage - 1)}>
                   <span aria-hidden="true">&laquo;</span>
-                </a>
+                </button>
               </li>
-              <li className="page-item"><a className="page-link" href="/">1</a></li>
-              <li className="page-item"><a className="page-link" href="/">2</a></li>
-              <li className="page-item"><a className="page-link" href="/">3</a></li>
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Next">
+              {paginationLinks}
+              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                <button className="page-link" aria-label="Next" onClick={() => handlePageChange(currentPage + 1)}>
                   <span aria-hidden="true">&raquo;</span>
-                </a>
+                </button>
               </li>
             </ul>
           </nav>

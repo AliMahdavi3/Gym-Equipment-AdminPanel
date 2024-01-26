@@ -42,7 +42,7 @@ const AddEquippedGym = ({ selectedEquippedGymId }) => {
                 });
                 swal({
                     title: "عملیات موفقیت آمیز بود",
-                    text: "!محصول ویرایش شد",
+                    text: "!باشگاه ویرایش شد",
                     icon: "success",
                     button: "متوجه شدم",
                 }).then(() => {
@@ -57,7 +57,7 @@ const AddEquippedGym = ({ selectedEquippedGymId }) => {
                 });
                 swal({
                     title: "عملیات موفقیت آمیز بود",
-                    text: "!محصول ایجاد شد",
+                    text: "!باشگاه ایجاد شد",
                     icon: "success",
                     button: "متوجه شدم",
                 }).then(() => {

@@ -11,6 +11,9 @@ const EquippedGym = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
   const [selectedEquippedGymId, setSelectedEquippedGymId] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/equippedGyms').then((res) => {
@@ -26,6 +29,34 @@ const EquippedGym = () => {
     setSelectedEquippedGymId(equippedGymId ? equippedGymId : '');
     console.log(equippedGymId ? equippedGymId : '');
     setShow(true);
+  }
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data
+    .filter(
+      (d) =>
+        d.title.includes(searchTerm) ||
+        d.content.includes(searchTerm) ||
+        d.address.includes(searchTerm)
+    )
+    .slice(0)
+    .reverse()
+    .slice(indexOfFirstItem, indexOfLastItem);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  }
+
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const paginationLinks = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    paginationLinks.push(
+      <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
+        <button className="page-link" onClick={() => handlePageChange(i)}>{i}</button>
+      </li>
+    );
   }
 
   const handleDeleteEquippedGym = async (equippedGymId) => {
@@ -67,7 +98,7 @@ const EquippedGym = () => {
         </div>
         <div>
           <div className="my-3 search_box">
-            <input type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+            <input onChange={(e) => setSearchTerm(e.target.value)} type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
             <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />
           </div>
           <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
@@ -76,31 +107,7 @@ const EquippedGym = () => {
               <FaWindowClose className="close text-danger fs-1" onClick={() => setShow(false)} />
             </Modal.Header>
             <Modal.Body>
-              <AddEquippedGym selectedEquippedGymId={selectedEquippedGymId}/>
-              {/* <form className='container w-100'>
-                <div className='modal_fields'>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="title_2">اسم باشگاه</label>
-                    <input placeholder='اسم محصول' type="text" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="content-2">توضیحات</label>
-                    <textarea placeholder='توضیحات' name="" className='px-3 py-2 rounded-3 w-100' id="" cols="30" rows="10"></textarea>
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="content-2">آدرس</label>
-                    <textarea placeholder='آدرس' name="" className='px-3 py-2 rounded-3 w-100' id="" cols="30" rows="5"></textarea>
-                  </div>
-                  <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصاویر</label>
-                    <input placeholder='تصویر' type="file" className='px-3 py-2 rounded-3 w-100' />
-                  </div>
-                </div>
-                <div className="submit_btn mt-5 mb-5">
-                  <button className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                  <button className='btn btn-danger px-3 mx-2'>انصراف</button>
-                </div>
-              </form> */}
+              <AddEquippedGym selectedEquippedGymId={selectedEquippedGymId} />
             </Modal.Body>
           </Modal>
         </div>
@@ -118,47 +125,44 @@ const EquippedGym = () => {
             </thead>
             <tbody className="table-group-divider">
               {
-                Array.isArray(data) ?
-                  data.map((d, index) => (
-                    <tr>
-                      <th scope="row">{index + 1}</th>
-                      <td>{d.title}</td>
-                      <td className='content_table'>
-                        <p>{d.content}</p>
-                      </td>
-                      <td className='content_table'>
-                        <p>{d.address}</p>
-                      </td>
-                      <td className='w-25'>
-                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[0]} alt="" />
-                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[1]} alt="" />
-                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[2]} alt="" />
-                        <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[3]} alt="" />
-                      </td>
-                      <td>
-                        <FaTrashAlt onClick={() => handleDeleteEquippedGym(d._id)} className='mx-2 text-danger' />
-                        <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
-                      </td>
-                    </tr>
-                  )) : null}
+                currentItems.map((d, index) => (
+                  <tr>
+                    <th scope="row">{data.length - indexOfFirstItem - index}</th>
+                    <td>{d.title}</td>
+                    <td className='content_table'>
+                      <p>{d.content}</p>
+                    </td>
+                    <td className='content_table'>
+                      <p>{d.address}</p>
+                    </td>
+                    <td className='w-25'>
+                      <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[0]} alt="" />
+                      <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[1]} alt="" />
+                      <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[2]} alt="" />
+                      <img className='w-25' src={'http://localhost:4000/' + d.imageUrl[3]} alt="" />
+                    </td>
+                    <td>
+                      <FaTrashAlt onClick={() => handleDeleteEquippedGym(d._id)} className='mx-2 text-danger' />
+                      <FaEdit onClick={() => handleShowModal(d._id)} className='mx-2 text-warning' />
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
         <div className="pagination mt-2 d-flex justify-content-center align-items-center">
-          <nav dir='ltr' aria-label="Page navigation example">
+          <nav dir="ltr" aria-label="Page navigation example">
             <ul className="pagination rounded-3">
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Previous">
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                <button className="page-link" aria-label="Previous" onClick={() => handlePageChange(currentPage - 1)}>
                   <span aria-hidden="true">&laquo;</span>
-                </a>
+                </button>
               </li>
-              <li className="page-item"><a className="page-link" href="/">1</a></li>
-              <li className="page-item"><a className="page-link" href="/">2</a></li>
-              <li className="page-item"><a className="page-link" href="/">3</a></li>
-              <li className="page-item">
-                <a className="page-link" href="/" aria-label="Next">
+              {paginationLinks}
+              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                <button className="page-link" aria-label="Next" onClick={() => handlePageChange(currentPage + 1)}>
                   <span aria-hidden="true">&raquo;</span>
-                </a>
+                </button>
               </li>
             </ul>
           </nav>
