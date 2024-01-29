@@ -1,6 +1,8 @@
+import moment from 'moment-jalaali';
 import React, { useState } from 'react'
+import { FaPlusSquare } from 'react-icons/fa';
 
-const PaginatedTable = ({ dataInfo, data, additionalField }) => {
+const PaginatedTable = ({ dataInfo, data, additionalField, children, handleShowModal }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
@@ -37,33 +39,61 @@ const PaginatedTable = ({ dataInfo, data, additionalField }) => {
         <>
             <div>
                 <div className="my-3 search_box">
-                    <input onChange={(e) => setSearchTerm(e.target.value)} type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+                    <input onChange={(e) => setSearchTerm(e.target.value)}
+                        type="text" className='px-3 py-2 rounded-3' placeholder='جستجو' />
+                    {handleShowModal && <FaPlusSquare onClick={() => handleShowModal()} className='fs-1 text-success' />}
+                    {children}
                 </div>
             </div>
             <div className='mt-3 table-responsive rounded-4'>
                 <table className="table rounded-4 text-center">
+                    <colgroup>
+                        <col style={{ width: "5%" }} />
+                        {dataInfo.map((i) => (
+                            <col key={i.field} style={{ width: `${100 / (dataInfo.length + (additionalField ? additionalField.length : 0) + 1)}%` }} />
+                        ))}
+                        {additionalField &&
+                            additionalField.map((a, index) => (
+                                <col key={a._id + '__' + index} style={{ width: `${100 / (dataInfo.length + additionalField.length + 1)}%` }} />
+                            ))}
+                    </colgroup>
+
                     <thead>
                         <tr>
+                            <th>#</th>
                             {dataInfo.map((i) => (
                                 <th key={i.field} scope="col">{i.title}</th>
                             ))}
                             {
-                                additionalField ? (
-                                    <th>{additionalField.title}</th>
-                                ) : null
+                                additionalField ? additionalField.map((a, index) => (
+                                    <th key={a._id + '__' + index}>{a.title}</th>
+                                )) : null
                             }
                         </tr>
                     </thead>
                     <tbody className="table-group-divider">
-                        {currentItems.map((d) => (
-                            <tr>
+                        {currentItems.map((d, index) => (
+                            <tr key={d._id}>
+                                <td>{index + 1}</td>
                                 {dataInfo.map((i) => (
-                                    <td key={i.field + '_' + d._id} >{d[i.field]}</td>
+                                    <td className='' key={i.field + '_' + d._id}>
+                                        {i.field === 'createdAt'
+                                            ? moment(d[i.field]).format('jYYYY/jMM/jDD HH:mm:ss')
+                                            : i.field === 'imageUrl'
+                                                ? <img src={'http://localhost:4000/' + d[i.field][0]}
+                                                    style={{ maxWidth: "100%", height: "auto" }}
+                                                    alt={i.title} className='w-50' />
+                                                : i.field === 'content'
+                                                    ? <p className='content_table'>{d[i.field]}</p>
+                                                    : i.field === 'value' ?
+                                                        <p className='content_table' dangerouslySetInnerHTML={{ __html: d[i.field] }}></p>
+                                                        : d[i.field]}
+                                    </td>
                                 ))}
                                 {
-                                    additionalField ? (
-                                        <td>{additionalField.elements(d._id)}</td>
-                                    ) : null
+                                    additionalField ? additionalField.map((a, index) => (
+                                        <td key={a._id + '__' + index}>{a.elements(d)}</td>
+                                    )) : null
                                 }
                             </tr>
                         ))}
@@ -88,7 +118,6 @@ const PaginatedTable = ({ dataInfo, data, additionalField }) => {
                 </nav>
             </div>
         </>
-
     )
 }
 

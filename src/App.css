@@ -170,13 +170,9 @@ body {
     height: 5vh;
 }
 
-.content_table p {
-    height: 3rem;
-    overflow: hidden;
-}
-
 .content_table {
-    width: 20%;
+    max-height: 100px;
+    overflow: auto;
 }
 
 .search_box {
@@ -195,8 +191,6 @@ body {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
-.modal_header {}
-
 @media screen and (max-width : 600px) {
     .products_main .table {
         font-size: 60%;
@@ -207,13 +201,3 @@ body {
     }
 }
 
-
-
-
-
-
-
-
-/* ===================================================products========================================= */
-/* ===================================================products========================================= */
-/* ===================================================products========================================= */

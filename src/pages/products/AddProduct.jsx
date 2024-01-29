@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
+import ModalContainer from '../../components/ModalContainer';
 
-const AddProduct = ({ selectedProductId }) => {
+const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState([]);
     const [productCode, setProductCode] = useState('');
     const [category, setCategory] = useState('');
-    
+
 
     useEffect(() => {
         if (selectedProductId) {
@@ -81,34 +82,36 @@ const AddProduct = ({ selectedProductId }) => {
 
 
     return (
-        <form className='container w-100' onSubmit={handleSubmit}>
-            <div className='modal_fields'>
-                <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="title">نام محصول</label>
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder='نام محصول' id="title" type="text" className='px-3 py-2 rounded-3 w-100' />
+        <ModalContainer show={show} setShow={setShow} modalTitle={modalTitle}>
+            <form className='container w-100' onSubmit={handleSubmit}>
+                <div className='modal_fields'>
+                    <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
+                        <label className='mb-2 fw-semibold' htmlFor="title">نام محصول</label>
+                        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder='نام محصول' id="title" type="text" className='px-3 py-2 rounded-3 w-100' />
+                    </div>
+                    <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
+                        <label className='mb-2 fw-semibold' htmlFor="content">توضیحات محصول</label>
+                        <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder='توضیحات محصول' id="content" name="" className='px-3 py-2 rounded-3 w-100'
+                            cols="30" rows="10"></textarea>
+                    </div>
+                    <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
+                        <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر محصول</label>
+                        <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر محصول' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
+                    </div>
+                    <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
+                        <label className='mb-2 fw-semibold' htmlFor="productCode">کد محصول</label>
+                        <input value={productCode} onChange={(e) => setProductCode(e.target.value)} placeholder='کد محصول' id="productCode" type="text" className='px-3 py-2 rounded-3 w-100' />
+                    </div>
+                    <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
+                        <label className='mb-2 fw-semibold' htmlFor="category">دسته بندی محصول</label>
+                        <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder='دسته بندی محصول' id="category" type="text" className='px-3 py-2 rounded-3 w-100' />
+                    </div>
                 </div>
-                <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="content">توضیحات محصول</label>
-                    <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder='توضیحات محصول' id="content" name="" className='px-3 py-2 rounded-3 w-100'
-                        cols="30" rows="10"></textarea>
+                <div className="submit_btn mt-3 mb-5">
+                    <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
                 </div>
-                <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر محصول</label>
-                    <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر محصول' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
-                </div>
-                <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="productCode">کد محصول</label>
-                    <input value={productCode} onChange={(e) => setProductCode(e.target.value)} placeholder='کد محصول' id="productCode" type="text" className='px-3 py-2 rounded-3 w-100' />
-                </div>
-                <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                    <label className='mb-2 fw-semibold' htmlFor="category">دسته بندی محصول</label>
-                    <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder='دسته بندی محصول' id="category" type="text" className='px-3 py-2 rounded-3 w-100' />
-                </div>
-            </div>
-            <div className="submit_btn mt-3 mb-5">
-                <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-            </div>
-        </form>
+            </form>
+        </ModalContainer>
     )
 }
 
