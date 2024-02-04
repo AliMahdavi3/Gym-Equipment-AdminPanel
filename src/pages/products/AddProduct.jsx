@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import ModalContainer from '../../components/ModalContainer';
+import SubmitButton from '../../components/SubmitButton';
 
 const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
     const [title, setTitle] = useState('');
@@ -9,11 +10,12 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
     const [image, setImage] = useState([]);
     const [productCode, setProductCode] = useState('');
     const [category, setCategory] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     useEffect(() => {
         if (selectedProductId) {
-            axios.get(`http://localhost:4000/api/product/${selectedProductId}`).then((res) => {
+            axios.get(`https://api.iliyafitness.com/api/product/${selectedProductId}`).then((res) => {
                 const product = res.data.product;
                 setTitle(product.title);
                 setContent(product.content);
@@ -28,6 +30,7 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -39,7 +42,7 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
 
         try {
             if (selectedProductId) {
-                const res = await axios.put(`http://localhost:4000/api/product/${selectedProductId}`, formData, {
+                const res = await axios.put(`https://api.iliyafitness.com/api/product/${selectedProductId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -54,7 +57,7 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                 });
                 console.log(res.data);
             } else {
-                const res = await axios.post('http://localhost:4000/api/product', formData, {
+                const res = await axios.post('https://api.iliyafitness.com/api/product', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -95,8 +98,9 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                             cols="30" rows="10"></textarea>
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                        <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر محصول</label>
-                        <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر محصول' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
+                        <label className='mb-2 text-success fs-4 fw-semibold' htmlFor="imageUrl">حداقل 4 تصویر انتخاب کنید</label>
+                        <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر محصول' id="imageUrl" type="file" 
+                        className='px-3 py-2 rounded-3 form-control w-100' multiple />
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
                         <label className='mb-2 fw-semibold' htmlFor="productCode">کد محصول</label>
@@ -107,9 +111,7 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                         <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder='دسته بندی محصول' id="category" type="text" className='px-3 py-2 rounded-3 w-100' />
                     </div>
                 </div>
-                <div className="submit_btn mt-3 mb-5">
-                    <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                </div>
+              <SubmitButton isSubmitting={isSubmitting}/>
             </form>
         </ModalContainer>
     )

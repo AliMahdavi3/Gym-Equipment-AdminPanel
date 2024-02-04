@@ -13,7 +13,7 @@ const QuestionTable = () => {
 
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/questions').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/questions').then((res) => {
             console.log(res.data.questions);
             setData(res.data.questions)
         }).catch((error) => {
@@ -37,7 +37,7 @@ const QuestionTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/question/${questionId}`)
+                axios.delete(`https://api.iliyafitness.com/api/question/${questionId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== questionId));

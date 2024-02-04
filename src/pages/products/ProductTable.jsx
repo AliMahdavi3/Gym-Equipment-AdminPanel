@@ -12,7 +12,7 @@ const ProductTable = () => {
     const [selectedProductId, setSelectedProductId] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/products').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/products').then((res) => {
             console.log(res.data.products);
             setData(res.data.products)
         }).catch((error) => {
@@ -36,7 +36,7 @@ const ProductTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/product/${productId}`)
+                axios.delete(`https://api.iliyafitness.com/api/product/${productId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== productId));

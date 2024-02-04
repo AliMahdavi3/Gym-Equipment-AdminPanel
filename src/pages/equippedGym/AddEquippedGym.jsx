@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import swal from 'sweetalert';
 import ModalContainer from '../../components/ModalContainer';
+import SubmitButton from '../../components/SubmitButton';
 
 const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState([]);
     const [address, setAddress] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (selectedEquippedGymId) {
-            axios.get(`http://localhost:4000/api/equippedGym/${selectedEquippedGymId}`).then((res) => {
+            axios.get(`https://api.iliyafitness.com/api/equippedGym/${selectedEquippedGymId}`).then((res) => {
                 const equippedGym = res.data.equippedGym;
                 setTitle(equippedGym.title);
                 setContent(equippedGym.content);
@@ -25,6 +27,7 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -35,7 +38,7 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
 
         try {
             if (selectedEquippedGymId) {
-                const res = await axios.put(`http://localhost:4000/api/equippedGym/${selectedEquippedGymId}`, formData, {
+                const res = await axios.put(`https://api.iliyafitness.com/api/equippedGym/${selectedEquippedGymId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -50,7 +53,7 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                 });
                 console.log(res.data);
             } else {
-                const res = await axios.post('http://localhost:4000/api/equippedGym', formData, {
+                const res = await axios.post('https://api.iliyafitness.com/api/equippedGym', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -92,9 +95,11 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                             cols="30" rows="10"></textarea>
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                        <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصاویر</label>
+                        <label className='mb-2 fw-semibold fs-5 text-success' 
+                        htmlFor="imageUrl">حداقل 4 تصویر انتخاب کنید</label>
                         <input onChange={(e) => setImage(Array.from(e.target.files))}
-                            placeholder='تصاویر' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
+                            placeholder='تصاویر' id="imageUrl" type="file" 
+                            className='px-3 py-2 form-control rounded-3 w-100' multiple />
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
                         <label className='mb-2 fw-semibold' htmlFor="address">آدرس</label>
@@ -102,9 +107,7 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                             placeholder='آدرس' id="address" type="text" className='px-3 py-2 rounded-3 w-100' />
                     </div>
                 </div>
-                <div className="submit_btn mt-3 mb-5">
-                    <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                </div>
+                <SubmitButton isSubmitting={isSubmitting}/>
             </form>
         </ModalContainer>
     )

@@ -8,7 +8,7 @@ export const initialValues = {
 }
 
 export const onSubmit = async (values, action, navigate) => {
-    axios.post('http://localhost:4000/auth/login', values).then(res => {
+    axios.post('https://api.iliyafitness.com/auth/login', values).then(res => {
         if (res.status === 200) {
             console.log(res);
             localStorage.setItem('Token', JSON.stringify(res.data));

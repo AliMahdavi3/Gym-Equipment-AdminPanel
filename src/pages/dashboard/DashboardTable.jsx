@@ -8,7 +8,7 @@ const DashboardTable = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/sendMessages').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/sendMessages').then((res) => {
             console.log(res.data.sendMessages);
             setData(res.data.sendMessages)
         }).catch((error) => {
@@ -24,7 +24,7 @@ const DashboardTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/sendMessage/${messageId}`)
+                axios.delete(`https://api.iliyafitness.com/api/sendMessage/${messageId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== messageId));

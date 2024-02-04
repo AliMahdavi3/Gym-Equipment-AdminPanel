@@ -4,15 +4,18 @@ import ReactQuill from 'react-quill';
 import swal from 'sweetalert';
 import 'react-quill/dist/quill.snow.css';
 import ModalContainer from '../../components/ModalContainer';
+import SubmitButton from '../../components/SubmitButton';
 
 const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
     const [title, setTitle] = useState('');
     const [image, setImage] = useState([]);
     const [author, setAuthor] = useState('');
     const [value, setValue] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('value', value);
@@ -23,7 +26,7 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
 
         try {
             if (selectedArticleId) {
-                const res = await axios.put(`http://localhost:4000/api/article/${selectedArticleId}`, formData, {
+                const res = await axios.put(`https://api.iliyafitness.com/api/article/${selectedArticleId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -38,7 +41,7 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
                 });
                 console.log(res.data);
             } else {
-                const res = await axios.post('http://localhost:4000/api/article', formData, {
+                const res = await axios.post('https://api.iliyafitness.com/api/article', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -93,17 +96,16 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
                             onChange={setValue} />
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                        <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر</label>
-                        <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
+                        <label className='mb-2 fw-semibold fs-4 text-danger' htmlFor="imageUrl">فقط یک تصویر انتخاب کنید</label>
+                        <input onChange={(e) => setImage(Array.from(e.target.files))} placeholder='تصویر' 
+                        id="imageUrl" type="file" className='form-control px-3 py-2 rounded-3 w-100' multiple />
                     </div>
                     <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
                         <label className='mb-2 fw-semibold' htmlFor="productCode">نویسنده</label>
                         <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder='نویسنده' id="productCode" type="text" className='px-3 py-2 rounded-3 w-100' />
                     </div>
                 </div>
-                <div className="submit_btn mt-3 mb-5">
-                    <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                </div>
+                <SubmitButton isSubmitting={isSubmitting}/>
             </form>
         </ModalContainer>
     )

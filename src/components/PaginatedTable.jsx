@@ -80,7 +80,7 @@ const PaginatedTable = ({ dataInfo, data, additionalField, children, handleShowM
                                         {i.field === 'createdAt'
                                             ? moment(d[i.field]).format('jYYYY/jMM/jDD HH:mm:ss')
                                             : i.field === 'imageUrl'
-                                                ? <img src={'http://localhost:4000/' + d[i.field][0]}
+                                                ? <img src={'https://api.iliyafitness.com/' + d[i.field][0]}
                                                     style={{ maxWidth: "100%", height: "auto" }}
                                                     alt={i.title} className='w-50' />
                                                 : i.field === 'content'

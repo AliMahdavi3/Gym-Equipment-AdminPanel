@@ -14,7 +14,7 @@ const ArticlesTable = () => {
 
     useEffect(() => {
         if (selectedArticleId) {
-            axios.get(`http://localhost:4000/api/article/${selectedArticleId}`).then((res) => {
+            axios.get(`https://api.iliyafitness.com/api/article/${selectedArticleId}`).then((res) => {
                 const article = res.data.article
             }).catch((error) => {
                 console.log(error.message);
@@ -23,7 +23,7 @@ const ArticlesTable = () => {
     }, [selectedArticleId]);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/articles').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/articles').then((res) => {
             console.log(res.data.articles);
             setData(res.data.articles);
         }).catch((error) => {
@@ -49,7 +49,7 @@ const ArticlesTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/article/${articleId}`)
+                axios.delete(`https://api.iliyafitness.com/api/article/${articleId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== articleId));

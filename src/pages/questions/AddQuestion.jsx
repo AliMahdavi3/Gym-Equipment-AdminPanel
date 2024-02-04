@@ -2,15 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import ModalContainer from '../../components/ModalContainer';
+import SubmitButton from '../../components/SubmitButton';
 
 const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     useEffect(() => {
         if (selectedQuestionId) {
-            axios.get(`http://localhost:4000/api/question/${selectedQuestionId}`).then((res) => {
+            axios.get(`https://api.iliyafitness.com/api/question/${selectedQuestionId}`).then((res) => {
                 const question = res.data.question;
                 setTitle(question.title);
                 setContent(question.content);
@@ -22,13 +24,14 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
 
         try {
             if (selectedQuestionId) {
-                const res = await axios.put(`http://localhost:4000/api/question/${selectedQuestionId}`, formData, {
+                const res = await axios.put(`https://api.iliyafitness.com/api/question/${selectedQuestionId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -43,7 +46,7 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                 });
                 console.log(res.data);
             } else {
-                const res = await axios.post('http://localhost:4000/api/question', formData, {
+                const res = await axios.post('https://api.iliyafitness.com/api/question', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -83,9 +86,7 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                             cols="30" rows="10"></textarea>
                     </div>
                 </div>
-                <div className="submit_btn mt-3 mb-5">
-                    <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                </div>
+                <SubmitButton isSubmitting={isSubmitting}/>
             </form>
         </ModalContainer>
     )

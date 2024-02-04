@@ -13,7 +13,7 @@ const EquippedGymTable = () => {
 
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/equippedGyms').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/equippedGyms').then((res) => {
             console.log(res.data.equippedGyms);
             setData(res.data.equippedGyms);
         }).catch((error) => {
@@ -38,7 +38,7 @@ const EquippedGymTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/equippedGym/${equippedGymId}`)
+                axios.delete(`https://api.iliyafitness.com/api/equippedGym/${equippedGymId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== equippedGymId));

@@ -13,7 +13,7 @@ const BestSellingTable = () => {
 
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/bestSellings').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/bestSellings').then((res) => {
             console.log(res.data.bestSellings);
             setData(res.data.bestSellings)
         }).catch((error) => {
@@ -36,7 +36,7 @@ const BestSellingTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/bestSellings/${bestSellingId}`)
+                axios.delete(`https://api.iliyafitness.com/api/bestSellings/${bestSellingId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== bestSellingId));

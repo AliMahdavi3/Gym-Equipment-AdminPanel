@@ -8,7 +8,7 @@ const CommentTable = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/comments').then((res) => {
+        axios.get('https://api.iliyafitness.com/api/comments').then((res) => {
             console.log(res.data.comments);
             setData(res.data.comments)
         }).catch((error) => {
@@ -24,7 +24,7 @@ const CommentTable = () => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                axios.delete(`http://localhost:4000/api/comment/${commentId}`)
+                axios.delete(`https://api.iliyafitness.com/api/comment/${commentId}`)
                     .then((res) => {
                         console.log(res.data);
                         setData(data.filter((d) => d._id !== commentId));

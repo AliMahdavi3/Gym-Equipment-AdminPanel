@@ -2,16 +2,18 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert';
 import ModalContainer from '../../components/ModalContainer';
+import SubmitButton from '../../components/SubmitButton';
 
 const AddBestSelling = ({ selectedBestSellingId, setShow, show, modalTitle }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     useEffect(() => {
         if (selectedBestSellingId) {
-            axios.get(`http://localhost:4000/api/bestSellings/${selectedBestSellingId}`).then((res) => {
+            axios.get(`https://api.iliyafitness.com/api/bestSellings/${selectedBestSellingId}`).then((res) => {
                 const bestSelling = res.data.bestSelling;
                 setTitle(bestSelling.title);
                 setContent(bestSelling.content);
@@ -24,6 +26,7 @@ const AddBestSelling = ({ selectedBestSellingId, setShow, show, modalTitle }) =>
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -35,7 +38,7 @@ const AddBestSelling = ({ selectedBestSellingId, setShow, show, modalTitle }) =>
 
         try {
             if (selectedBestSellingId) {
-                const res = await axios.put(`http://localhost:4000/api/bestSellings/${selectedBestSellingId}`, formData, {
+                const res = await axios.put(`https://api.iliyafitness.com/api/bestSellings/${selectedBestSellingId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -50,7 +53,7 @@ const AddBestSelling = ({ selectedBestSellingId, setShow, show, modalTitle }) =>
                 });
                 console.log(res.data);
             } else {
-                const res = await axios.post('http://localhost:4000/api/bestSellings', formData, {
+                const res = await axios.post('https://api.iliyafitness.com/api/bestSellings', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -92,14 +95,12 @@ const AddBestSelling = ({ selectedBestSellingId, setShow, show, modalTitle }) =>
                                     cols="30" rows="10"></textarea>
                             </div>
                             <div className='d-flex flex-column mb-3 justify-content-start align-items-start'>
-                                <label className='mb-2 fw-semibold' htmlFor="imageUrl">تصویر محصول</label>
+                                <label className='mb-2 fs-4 text-primary fw-semibold' htmlFor="imageUrl">فقط یک تصویر انتخاب کنید</label>
                                 <input onChange={(e) => setImage(Array.from(e.target.files))}
-                                    placeholder='تصویر محصول' id="imageUrl" type="file" className='px-3 py-2 rounded-3 w-100' multiple />
+                                    placeholder='تصویر محصول' id="imageUrl" type="file" className='px-3 py-2 rounded-3 form-control w-100' multiple />
                             </div>
                         </div>
-                        <div className="submit_btn mt-3 mb-5">
-                            <button type='submit' className='btn btn-primary px-3 mx-2'>ذخیره</button>
-                        </div>
+                       <SubmitButton isSubmitting={isSubmitting}/>
                     </form>
         </ModalContainer>
     )
