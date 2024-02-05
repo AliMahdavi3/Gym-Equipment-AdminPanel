@@ -20,8 +20,12 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                 setImage(equippedGym.image);
                 setAddress(equippedGym.address);
             }).catch((error) => {
-                console.log(error.message);
-            })
+                swal({
+                    title: "خطایی رخ داده!",
+                    text: error.message,
+                    icon: "warning",
+                    button: "متوجه شدم",
+                });            })
         }
     }, [selectedEquippedGymId]);
 
@@ -51,7 +55,6 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             } else {
                 const res = await axios.post('https://api.iliyafitness.com/api/equippedGym', formData, {
                     headers: {
@@ -66,7 +69,6 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             }
         } catch (error) {
             swal({
@@ -75,7 +77,6 @@ const AddEquippedGym = ({ selectedEquippedGymId, show, setShow, modalTitle }) =>
                 icon: "warning",
                 button: "متوجه شدم",
             });
-            console.log(error.message);
         }
     }
     

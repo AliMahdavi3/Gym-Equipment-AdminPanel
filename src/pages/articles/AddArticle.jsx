@@ -39,7 +39,6 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             } else {
                 const res = await axios.post('https://api.iliyafitness.com/api/article', formData, {
                     headers: {
@@ -54,7 +53,6 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             }
         } catch (error) {
             swal({
@@ -63,7 +61,6 @@ const AddArticle = ({ selectedArticleId, show, setShow, modalTitle }) => {
                 icon: "warning",
                 button: "متوجه شدم",
             });
-            console.log(error.message);
         }
     }
 

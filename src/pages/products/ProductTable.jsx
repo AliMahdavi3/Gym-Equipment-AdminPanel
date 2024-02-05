@@ -13,18 +13,20 @@ const ProductTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/products').then((res) => {
-            console.log(res.data.products);
             setData(res.data.products)
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
 
     const handleShowModal = (productId, breakpoint) => {
         setFullscreen(breakpoint);
         setSelectedProductId(productId ? productId : '');
-        console.log(productId ? productId : '');
         setShow(true);
     }
 
@@ -38,7 +40,6 @@ const ProductTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/product/${productId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== productId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

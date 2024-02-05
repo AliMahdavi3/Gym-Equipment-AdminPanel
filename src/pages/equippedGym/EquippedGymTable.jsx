@@ -14,17 +14,19 @@ const EquippedGymTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/equippedGyms').then((res) => {
-            console.log(res.data.equippedGyms);
             setData(res.data.equippedGyms);
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
     const handleShowModal = (equippedGymId, breakpoint) => {
         setFullscreen(breakpoint);
         setSelectedEquippedGymId(equippedGymId ? equippedGymId : '');
-        console.log(equippedGymId ? equippedGymId : '');
         setShow(true);
     }
 
@@ -40,7 +42,6 @@ const EquippedGymTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/equippedGym/${equippedGymId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== equippedGymId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

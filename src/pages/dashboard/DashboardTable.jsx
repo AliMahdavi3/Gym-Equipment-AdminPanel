@@ -9,11 +9,14 @@ const DashboardTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/sendMessages').then((res) => {
-            console.log(res.data.sendMessages);
             setData(res.data.sendMessages)
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
     const handleDeleteQuestion = async (messageId) => {
@@ -26,7 +29,6 @@ const DashboardTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/sendMessage/${messageId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== messageId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

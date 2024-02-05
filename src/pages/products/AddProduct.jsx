@@ -23,8 +23,12 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                 setProductCode(product.productCode);
                 setCategory(product.category);
             }).catch((error) => {
-                console.log(error.message);
-            })
+                swal({
+                    title: "خطایی رخ داده!",
+                    text: error.message,
+                    icon: "warning",
+                    button: "متوجه شدم",
+                });            })
         }
     }, [selectedProductId]);
 
@@ -55,7 +59,6 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             } else {
                 const res = await axios.post('https://api.iliyafitness.com/api/product', formData, {
                     headers: {
@@ -70,7 +73,6 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             }
         } catch (error) {
             swal({
@@ -79,7 +81,6 @@ const AddProduct = ({ selectedProductId, setShow, show, modalTitle }) => {
                 icon: "warning",
                 button: "متوجه شدم",
             });
-            console.log(error.message);
         }
     }
 

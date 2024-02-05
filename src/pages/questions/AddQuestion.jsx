@@ -17,8 +17,12 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                 setTitle(question.title);
                 setContent(question.content);
             }).catch((error) => {
-                console.log(error.message);
-            })
+                swal({
+                    title: "خطایی رخ داده!",
+                    text: error.message,
+                    icon: "warning",
+                    button: "متوجه شدم",
+                });            })
         }
     }, [selectedQuestionId]);
 
@@ -44,7 +48,6 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             } else {
                 const res = await axios.post('https://api.iliyafitness.com/api/question', formData, {
                     headers: {
@@ -59,7 +62,6 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                 }).then(() => {
                     window.location.reload()
                 });
-                console.log(res.data);
             }
         } catch (error) {
             swal({
@@ -68,7 +70,6 @@ const AddQuestion = ({ selectedQuestionId, show, setShow, modalTitle }) => {
                 icon: "warning",
                 button: "متوجه شدم",
             });
-            console.log(error.message);
         }
     }
 

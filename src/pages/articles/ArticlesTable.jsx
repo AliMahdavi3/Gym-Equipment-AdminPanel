@@ -17,17 +17,26 @@ const ArticlesTable = () => {
             axios.get(`https://api.iliyafitness.com/api/article/${selectedArticleId}`).then((res) => {
                 const article = res.data.article
             }).catch((error) => {
-                console.log(error.message);
+                swal({
+                    title: "خطایی رخ داده!",
+                    text: error.message,
+                    icon: "warning",
+                    button: "متوجه شدم",
+                });
             })
         }
     }, [selectedArticleId]);
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/articles').then((res) => {
-            console.log(res.data.articles);
             setData(res.data.articles);
         }).catch((error) => {
-            console.log(error.message);
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });
         })
     }, []);
 
@@ -35,7 +44,6 @@ const ArticlesTable = () => {
     const handleShowModal = (articleId, breakpoint) => {
         setFullscreen(breakpoint);
         setSelectedArticleId(articleId ? articleId : '');
-        console.log(articleId ? articleId : '');
         setShow(true);
     }
 
@@ -51,7 +59,6 @@ const ArticlesTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/article/${articleId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== articleId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

@@ -9,11 +9,14 @@ const CommentTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/comments').then((res) => {
-            console.log(res.data.comments);
             setData(res.data.comments)
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
     const handleDeleteComment = async (commentId) => {
@@ -26,7 +29,6 @@ const CommentTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/comment/${commentId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== commentId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

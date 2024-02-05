@@ -14,17 +14,19 @@ const BestSellingTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/bestSellings').then((res) => {
-            console.log(res.data.bestSellings);
             setData(res.data.bestSellings)
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
     const handleShowModal = (bestSellingId, breakpoint) => {
         setFullscreen(breakpoint);
         setSelectedBestSellingId(bestSellingId ? bestSellingId : '');
-        console.log(bestSellingId ? bestSellingId : '');
         setShow(true);
     }
 
@@ -38,7 +40,6 @@ const BestSellingTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/bestSellings/${bestSellingId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== bestSellingId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",

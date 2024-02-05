@@ -14,18 +14,20 @@ const QuestionTable = () => {
 
     useEffect(() => {
         axios.get('https://api.iliyafitness.com/api/questions').then((res) => {
-            console.log(res.data.questions);
             setData(res.data.questions)
         }).catch((error) => {
-            console.log(error.message);
-        })
+            swal({
+                title: "خطایی رخ داده!",
+                text: error.message,
+                icon: "warning",
+                button: "متوجه شدم",
+            });        })
     }, []);
 
 
     const handleShowModal = (questionId, breakpoint) => {
         setFullscreen(breakpoint);
         setSelectedQuestionId(questionId ? questionId : '');
-        console.log(questionId ? questionId : '');
         setShow(true);
     }
 
@@ -39,7 +41,6 @@ const QuestionTable = () => {
             if (willDelete) {
                 axios.delete(`https://api.iliyafitness.com/api/question/${questionId}`)
                     .then((res) => {
-                        console.log(res.data);
                         setData(data.filter((d) => d._id !== questionId));
                         swal("اطلاعات موردنظر حذف شد!", {
                             icon: "success",
